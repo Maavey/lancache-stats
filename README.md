@@ -3,39 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>lancache-stats</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-  }
-  h1 {
-    color: #333;
-    text-align: center;
-  }
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  p {
-    line-height: 1.6;
-    color: #666;
-  }
-  code {
-    font-family: Consolas, monospace;
-    background-color: #f4f4f4;
-    padding: 2px 5px;
-    border-radius: 3px;
-  }
-  ul {
-    list-style-type: disc;
-    padding-left: 20px;
-  }
-</style>
 </head>
 <body>
-![Dashboard](https://raw.githubusercontent.com/Maavey/lancache-stats/main/lancache_stats.png)
+<img src="https://raw.githubusercontent.com/Maavey/lancache-stats/main/lancache_stats.png" alt="Dashboard Screenshot">
 <div class="container">
   <h1>LanCache Dashboard</h1>
   <p><strong>Collect, Parse and send logs to MySQL database to process it into an awesome dashboard.</strong></p>
