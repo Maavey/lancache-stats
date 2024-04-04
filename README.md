@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<img src="https://raw.githubusercontent.com/Maavey/lancache-stats/main/lancache_stats.png" alt="Dashboard Screenshot">
+
 <div class="container">
   <h1>LanCache Dashboard</h1>
   <p><strong>Collect, Parse and send logs to MySQL database to process it into an awesome dashboard.</strong></p>
   <p>Originally inspired by lancache-elk, but I found it too resource hungry for my needs, couldn't find a light alternative, so I decided to make a simple alternative.</p>
   
+  <img src="https://raw.githubusercontent.com/Maavey/lancache-stats/main/lancache_stats.png" alt="Dashboard Screenshot">
   <h2>Requirements:</h2>
   <ul>
     <li>Any LanCache system, I am using Monolithic LanCache.</li>
@@ -33,8 +34,12 @@
   <ul>
     <li>Integrate with Steam API to collect Game Name from DepotID (currently done manually for Steam).</li>
     <li>Auto Refresh the Dashboard using AJAX or auto page reload.</li>
+    <li>Improve Served IPs Section</li>
+    <li>Improve Handling log format outside the Container</li>
+    <li>Current Method empties log file upon parsing and inserts it into the DB, we'll probably relook into that</li>
     <li>Other ideas and pushes from contributors...</li>
   </ul>
+  <h4><a href="https://www.paypal.com/donate/?hosted_button_id=HV9H8JQ6XHGZY">Buy me Coffee?</a></h4>
 </div>
 </body>
 </html>
