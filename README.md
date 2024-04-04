@@ -1,0 +1,2 @@
+# lancache-stats
+LanCache Dashboard
