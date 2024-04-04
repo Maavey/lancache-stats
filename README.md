@@ -29,7 +29,7 @@
 
   <h2>Working:</h2>
   <p>Auto collection of logs and populating the database.</p>
-  <p>All Values are visible into the Dashboard</p>
+  <p>Everything in the screenshot is functional, <strong>but there is a lot of room for improvement. Feel free to contribute or modify it to suit your needs.</strong></p>
 
   <h2>To Do:</h2>
   <ul>
