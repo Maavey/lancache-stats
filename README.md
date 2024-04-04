@@ -39,7 +39,7 @@
     <li>Current Method empties log file upon parsing and inserts it into the DB, we'll probably relook into that</li>
     <li>Other ideas and pushes from contributors...</li>
   </ul>
-  <h4><a href="https://www.paypal.com/donate/?hosted_button_id=HV9H8JQ6XHGZY">Buy me Coffee?</a></h4>
+  <h4><a target="_blank" href="https://www.paypal.com/donate/?hosted_button_id=HV9H8JQ6XHGZY">Buy me Coffee?</a></h4>
 </div>
 </body>
 </html>
