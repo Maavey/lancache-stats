@@ -1,5 +1,5 @@
 #!/bin/bash
-LOCKFILE=/tmp/my_script.lock
+LOCKFILE=/tmp/sendlogs.lock
 
 # Check if lock file exists
 if [ -e "$LOCKFILE" ]; then
@@ -9,6 +9,7 @@ fi
 
 # Create lock file
 touch $LOCKFILE
+
 # MySQL database connection parameters
 DB_HOST="localhost"
 DB_USER="dbusername"
