@@ -208,11 +208,11 @@ if ($result) {
         };
 
         var data3 = {
-            labels: ['Cached', 'Served'],
+            labels: ['Served', 'Cached'],
             datasets: [{
-                data: [<?= $totalMiss ?>, <?= $totalHits ?>],
-                backgroundColor: ['#FF9800', '#4CAF50'],
-                hoverBackgroundColor: ['#FF9800', '#4CAF50']
+                data: [<?= $totalHits ?>, <?= $GBUsed ?>],
+                backgroundColor: ['#4CAF50', '#FF9800'],
+                hoverBackgroundColor: ['#4CAF50', '#FF9800']
             }]
         };
 

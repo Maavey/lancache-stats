@@ -1,5 +1,14 @@
 #!/bin/bash
+LOCKFILE=/tmp/my_script.lock
 
+# Check if lock file exists
+if [ -e "$LOCKFILE" ]; then
+    echo "Script is already running. Exiting..."
+    exit 1
+fi
+
+# Create lock file
+touch $LOCKFILE
 # MySQL database connection parameters
 DB_HOST="localhost"
 DB_USER="dbusername"
@@ -63,3 +72,5 @@ free_space=$(echo "$disk_usage" | awk '{gsub(/G/, ""); print $1}')
 used_space=$(echo "$disk_usage" | awk '{gsub(/G/, ""); print $2}')
 
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "UPDATE cache_disk SET GBUsed= '$used_space', GBFree='$free_space' ;"
+# Remove lock file
+rm $LOCKFILE
