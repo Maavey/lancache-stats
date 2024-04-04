@@ -18,7 +18,8 @@
     <li>mysqlclient on LanCache docker host.</li>
     <li>Modify <code>10_log_format.conf</code> as below.</li>
     <li>LAMP Server or Container + Restore attached db and PHP files.</li>
-    <li>Run a CronJob to call Attached <code>sendlogs.sh</code> every 10 minutes or 15 minutes to collect and parse logs into database.</li>
+    <li>Enter Database connection parameters in conn.php and in sendlogs.sh</li>
+    <li>Run a CronJob to call Attached sendlogs.sh every 10 minutes or 15 minutes to collect and parse logs into database.</li>
   </ul>
 
   <h2>Log Format:</h2>
