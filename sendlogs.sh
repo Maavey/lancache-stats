@@ -35,7 +35,7 @@ while IFS= read -r line; do
 
   app=""
   if [[ "$line" =~ /ias/ || "$line" =~ /chunks || "$line" =~ /depot/ || "$line" =~ /chunk/ ]]; then
-    app=$(echo "$line" | awk -F'/ias/|/chunks|/depot/|/chunk' '{print $(NF-1)}')
+    app=$(echo "$line" | awk -F'/ias/|/chunks|/depot/|/chunk|/manifest' '{print $(NF-1)}')
   fi
 
   # Skip lines with irrelevant status or missing fields
