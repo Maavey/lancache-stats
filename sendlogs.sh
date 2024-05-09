@@ -31,10 +31,7 @@ declare -A aggregated_data
 
 
 while IFS= read -r line; do
-  upstream=$(echo "$line" | awk '{print $3}')
-  status=$(echo "$line" | awk '{print $4}')
-  ip=$(echo "$line" | awk '{print $5}')
-  bytes=$(echo "$line" | awk '{print $7}')
+  read upstream status ip bytes <<< $(echo "$line" | awk '{print $3, $4, $5, $7}')
 
   app=""
   if [[ "$line" =~ /ias/ || "$line" =~ /chunks || "$line" =~ /depot/ || "$line" =~ /chunk/ ]]; then
