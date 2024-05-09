@@ -33,22 +33,25 @@ echo "Script started"
 declare -A aggregated_data
 
 while IFS= read -r line; do
-  upstream=$(echo "$line" | awk '{print $3}')
-  status=$(echo "$line" | awk '{print $4}')
-  ip=$(echo "$line" | awk '{print $5}')
-  bytes=$(echo "$line" | awk '{print $7}')
-
-  app=""
-  if [[ "$line" =~ /ias/ || "$line" =~ /chunks || "$line" =~ /depot/ || "$line" =~ /chunk/ ]]; then
-    app=$(echo "$line" | awk -F'/ias/|/chunks|/depot/|/chunk' '{print $(NF-1)}')
-  fi
+  read upstream status ip bytes url <<< $(echo "$line" | awk '{print $3, $4, $5, $7, $8}')
 
   # Skip lines with irrelevant status or missing fields
   if [[ -z "$upstream" || -z "$status" || -z "$ip" || -z "$bytes" ]]; then
     continue
   fi
-# Only process if status is HIT or MISS
+
+  # Only process if status is HIT or MISS
   if [[ "$status" == "HIT" || "$status" == "MISS" ]]; then
+    app=$(echo "$url" | awk -F'/ias/|/chunks|/depot/|/chunk|/manifest' '{
+    if (NF > 3) {
+      print $(NF-1)
+    }
+    else
+    {
+      print ""
+    }
+    }')
+
     # Aggregate data
     key="$ip|$upstream|$app|$status"
     ((aggregated_data["$key"] += bytes))
