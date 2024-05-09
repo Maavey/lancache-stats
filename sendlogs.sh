@@ -1,5 +1,17 @@
 #!/bin/bash
+
+# Log file path
+CACHE_LOCATION = "/LanCache"
+LOG_FILE="/LanCache/logs/access.log"
+
+# MySQL database connection parameters
+DB_HOST="localhost"
+DB_USER="dbusername"
+DB_PASS="dbpassword"
+DB_NAME="lancache_db"
+
 LOCKFILE=/tmp/sendlogs.lock
+
 
 # Check if lock file exists
 if [ -e "$LOCKFILE" ]; then
@@ -10,15 +22,6 @@ fi
 # Create lock file
 touch $LOCKFILE
 
-# MySQL database connection parameters
-DB_HOST="localhost"
-DB_USER="dbusername"
-DB_PASS="dbpassword"
-DB_NAME="lancache_db"
-
-# Log file path
-LOG_FILE="/home/r00t/cache/logs/access.log"
-
 # Check if the log file exists
 if [ ! -f "$LOG_FILE" ]; then
   echo "Error: Log file not found: $LOG_FILE"
@@ -28,7 +31,6 @@ fi
 echo "Script started"
 
 declare -A aggregated_data
-
 
 while IFS= read -r line; do
   upstream=$(echo "$line" | awk '{print $3}')
@@ -66,7 +68,7 @@ done
 # Clear the log file
 echo "" > "$LOG_FILE"
 
-disk_usage=$(df -BG /dev/sdb1 | awk 'NR==2 {print $4,$3}')
+disk_usage=$(df -BG $CACHE_LOCATION | awk 'NR==2 {print $4,$3}')
 
 # Split the output into free and used space
 free_space=$(echo "$disk_usage" | awk '{gsub(/G/, ""); print $1}')
