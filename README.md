@@ -4,8 +4,6 @@
 
 Originally inspired by lancache-elk, but I found it too resource hungry for my needs, couldn't find a light alternative, so I decided to make a simple alternative.
   
-![Dashboard Screenshot](https://raw.githubusercontent.com/Maavey/lancache-stats/main/lancache_stats.png)
-
 ## Requirements
 
 - Any LanCache system, but this has only been tested on [Monolithic](https://lancache.net/docs/containers/monolithic/)
@@ -13,9 +11,13 @@ Originally inspired by lancache-elk, but I found it too resource hungry for my n
     - Required for the *sendlogs.sh* script to push its data to a mysql database
     - For example: `apt-get install default-mysql-client`
 - A mysql server
-- A LAMP server or container, probably hosted on another system to make use of port 80/443.
+- For visualisation there are a few options we provide the setup for:
+    - A LAMP server or container, probably hosted on another system to make use of port 80/443.
+    - A Grafana instance.
 
 ## Setup
+
+### Data collection
 
 1. Execute *lancache_db.sql* on the mysql database.
 
@@ -35,9 +37,20 @@ Originally inspired by lancache-elk, but I found it too resource hungry for my n
     1. Add job entry, every minute is the fastest we can go: `* * * * * /path/to/sendlogs.sh`
     1. Save and exit
 
+### Dashboard using PHP
+
 1. On the LAMP server, copy *dashboard.php* and *conn.php.new* to the desired web folder.
 
 1. Edit *conn.php.new* with the database information and store or rename it as *conn.php*
+
+![PHP Dashboard Screenshot](lancache_stats.png)
+
+### Dashboard using Grafana
+
+1. Connect the lancache-stats DB to your Grafana.
+1. Import *grafana_dashboard.json* into your grafana instance. The database name used for this dashboard was *lancache_db*, and may need to be changed for your setup.
+
+![Grafana Dashboard Screenshot](lancache_stats_grafana.png)
 
 ## Supported functionality
 
@@ -46,12 +59,12 @@ Originally inspired by lancache-elk, but I found it too resource hungry for my n
 
 ## To Do
 
-- Integrate with Steam API to collect Game Name from DepotID (currently done manually for Steam).
-- Auto Refresh the Dashboard using AJAX or auto page reload.
-- Select a time range to display data for.
+- Integrate with Steam API to collect Game Name from DepotID (currently done manually for Steam). Perhaps use [SteamKit](https://github.com/SteamRE/SteamKit)?
+- Auto Refresh the Dashboard using AJAX or auto page reload (PHP).
+- Select a time range to display data for (PHP).
 - Parse the timestamp and combine (historical) data strictly per minute.
-- Improve Served IPs Section.
-- Improve Handling log format outside the Container.
+- Improve Served IPs Section (PHP).
+- Improve Handling log format outside the Container (sendlogs).
 - Current Method empties log file upon parsing and inserts it into the DB, we will probably relook into that.
     - For example, streaming with *tail -f*, but should only offload at certain intervals.
     - Log rotation support

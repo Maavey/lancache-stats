@@ -4,12 +4,12 @@ include 'conn.php';
 //Prepare Values
 
 //Query to get Disk Values
-$query = "SELECT GBUsed, GBFree FROM cache_disk";
+$query = "SELECT KiBUsed, KiBFree FROM cache_disk WHERE Location='data'";
 $result = mysqli_query($conn, $query);
 if ($result) {
     $row = mysqli_fetch_assoc($result);
-    $GBUsed = $row['GBUsed'];
-    $GBFree = $row['GBFree'];
+    $GBUsed = round($row['KiBUsed'] / 1024 / 1024, 2);
+    $GBFree = round($row['KiBFree'] / 1024 / 1024, 2);
 }
 
 //Query for Upstream
@@ -40,7 +40,7 @@ $query = "SELECT sum(Bytes) as Total FROM access_logs WHERE LStatus='HIT'";
 $result = mysqli_query($conn, $query);
 if ($result) {
     $row = mysqli_fetch_assoc($result);
-    $GBServed = number_format($row['Total'] / 1024 / 1024 / 1024, 2);
+    $GBServed = round($row['Total'] / 1024 / 1024 / 1024, 2);
 }
 
 //Query for Games
