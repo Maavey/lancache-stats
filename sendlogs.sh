@@ -81,10 +81,10 @@ used_space_cache=$(echo "$disk_usage_cache" | awk '{gsub(/K/, ""); print $2}')
 
 update_cache_usage_sql="UPDATE cache_disk SET KiBUsed= '$used_space_cache', KiBFree='$free_space_cache' WHERE Location='data'"
 
-disk_usage_logs=$(df -BK $LOGS_LOCATION | awk 'NR==2 {print $4,$3}')
+disk_usage_logs=$(du -BK $LOGS_LOCATION | awk 'NR==1 {print $1}')
 
 # Split the output into free and used space
-used_space_logs=$(echo "$disk_usage_cache" | awk '{gsub(/K/, ""); print $1}')
+used_space_logs=$(echo "$disk_usage_logs" | awk '{gsub(/K/, ""); print $1}')
 
 update_logs_usage_sql="UPDATE cache_disk SET KiBUsed= '$used_space_logs', KiBFree='$free_space_cache' WHERE Location='logs'"
 
