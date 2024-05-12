@@ -1,11 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Host: localhost
--- Generation Time: Apr 04, 2024 at 04:56 PM
--- Server version: 10.3.35-MariaDB
--- PHP Version: 7.2.24
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,14 +21,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `access_logs` (
-  `LID` int(11) NOT NULL,
+  `LID` int NOT NULL AUTO_INCREMENT,
   `LogDate` datetime NOT NULL DEFAULT current_timestamp(),
   `Upstream` varchar(100) NOT NULL,
   `LStatus` varchar(20) NOT NULL,
   `IP` varchar(15) DEFAULT NULL,
-  `Bytes` bigint(20) UNSIGNED DEFAULT NULL,
-  `App` varchar(300) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `Bytes` bigint UNSIGNED DEFAULT NULL,
+  `App` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`LID`),
+  KEY `TRACE` (`LogDate`,`LStatus`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -44,16 +39,19 @@ CREATE TABLE `access_logs` (
 --
 
 CREATE TABLE `cache_disk` (
-  `GBUsed` int(11) NOT NULL,
-  `GBFree` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `Location` varchar(4) NOT NULL,
+  `KiBUsed` bigint NOT NULL,
+  `KiBFree` bigint NOT NULL,
+  PRIMARY KEY (`Location`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cache_disk`
 --
 
-INSERT INTO `cache_disk` (`GBUsed`, `GBFree`) VALUES
-(0, 0);
+INSERT INTO `cache_disk` (`Location`, `KiBUsed`, `KiBFree`) VALUES
+('data', 0, 0),
+('logs', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -62,9 +60,10 @@ INSERT INTO `cache_disk` (`GBUsed`, `GBFree`) VALUES
 --
 
 CREATE TABLE `steamapps` (
-  `AppID` int(11) NOT NULL,
+  `AppID` int NOT NULL,
   `AppName` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`AppID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `steamapps`
@@ -79,32 +78,7 @@ INSERT INTO `steamapps` (`AppID`, `AppName`) VALUES
 (2347771, 'Counter-Strike 2');
 
 --
--- Indexes for dumped tables
---
-
---
--- Indexes for table `access_logs`
---
-ALTER TABLE `access_logs`
-  ADD PRIMARY KEY (`LID`);
-
---
--- Indexes for table `steamapps`
---
-ALTER TABLE `steamapps`
-  ADD UNIQUE KEY `AppID` (`AppID`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
---
--- AUTO_INCREMENT for table `access_logs`
---
-ALTER TABLE `access_logs`
-  MODIFY `LID` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

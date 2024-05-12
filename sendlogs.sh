@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Log file path
-CACHE_LOCATION = "/LanCache"
-LOG_FILE="/LanCache/logs/access.log"
+# Cache and Log file paths
+CACHE_LOCATION="/LanCache/"
+LOGS_LOCATION="$CACHE_LOCATION/logs"
+LOG_FILE="$LOGS_LOCATION/access.log"
 
 # MySQL database connection parameters
 DB_HOST="localhost"
@@ -10,8 +11,8 @@ DB_USER="dbusername"
 DB_PASS="dbpassword"
 DB_NAME="lancache_db"
 
+# Path to a file that, when created, indicates the script is already active
 LOCKFILE=/tmp/sendlogs.lock
-
 
 # Check if lock file exists
 if [ -e "$LOCKFILE" ]; then
@@ -71,12 +72,23 @@ done
 # Clear the log file
 echo "" > "$LOG_FILE"
 
-disk_usage=$(df -BG $CACHE_LOCATION | awk 'NR==2 {print $4,$3}')
+# df prints used and free size, and does not list every directory, which makes this faster than du for the cache/data folder
+disk_usage_cache=$(df -BK $CACHE_LOCATION | awk 'NR==2 {print $4,$3}')
 
 # Split the output into free and used space
-free_space=$(echo "$disk_usage" | awk '{gsub(/G/, ""); print $1}')
-used_space=$(echo "$disk_usage" | awk '{gsub(/G/, ""); print $2}')
+free_space_cache=$(echo "$disk_usage_cache" | awk '{gsub(/K/, ""); print $1}')
+used_space_cache=$(echo "$disk_usage_cache" | awk '{gsub(/K/, ""); print $2}')
 
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "UPDATE cache_disk SET GBUsed= '$used_space', GBFree='$free_space' ;"
+update_cache_usage_sql="UPDATE cache_disk SET KiBUsed= '$used_space_cache', KiBFree='$free_space_cache' WHERE Location='data'"
+
+disk_usage_logs=$(df -BK $LOGS_LOCATION | awk 'NR==2 {print $4,$3}')
+
+# Split the output into free and used space
+used_space_logs=$(echo "$disk_usage_cache" | awk '{gsub(/K/, ""); print $1}')
+
+update_logs_usage_sql="UPDATE cache_disk SET KiBUsed= '$used_space_logs', KiBFree='$free_space_cache' WHERE Location='logs'"
+
+mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$update_cache_usage_sql; $update_logs_usage_sql;"
+
 # Remove lock file
 rm $LOCKFILE
