@@ -44,7 +44,7 @@ while IFS= read -r line; do
   # Only process if status is HIT or MISS
   if [[ "$status" == "HIT" || "$status" == "MISS" ]]; then
     app=$(echo "$url" | awk -F'/ias/|/chunks|/depot/|/chunk|/manifest' '{
-    if (NF > 3) {
+    if (NF > 2) {
       print $(NF-1)
     }
     else
