@@ -61,7 +61,7 @@ INSERT INTO `cache_disk` (`Location`, `KiBUsed`, `KiBFree`) VALUES
 
 CREATE TABLE `steamapps` (
   `AppID` int NOT NULL,
-  `AppName` varchar(500) NOT NULL
+  `AppName` varchar(500) NOT NULL,
   PRIMARY KEY (`AppID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
