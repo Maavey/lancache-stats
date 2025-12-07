@@ -10,6 +10,7 @@ DB_HOST="localhost"
 DB_USER="dbusername"
 DB_PASS="dbpassword"
 DB_NAME="lancache_db"
+DB_PORT="3306"
 
 # Path to a file that, when created, indicates the script is already active
 LOCKFILE=/tmp/sendlogs.lock
@@ -32,6 +33,11 @@ fi
 echo "Script started"
 
 declare -A aggregated_data
+
+# create work file, so that mysql can be slow
+cp "$LOG_FILE" "${LOG_FILE}.work"
+# Clear the log file
+echo "" > "$LOG_FILE"
 
 while IFS= read -r line; do
   read upstream status ip bytes url <<< $(echo "$line" | awk '{print $3, $4, $5, $7, $8}')
@@ -59,18 +65,20 @@ while IFS= read -r line; do
   else
     echo "Skipping log entry with irrelevant status: $status"
   fi
-done < "$LOG_FILE"
+done < "${LOG_FILE}.work"
 
 # Insert aggregated records into the database
 for key in "${!aggregated_data[@]}"; do
   IFS='|' read -r ip upstream app status <<< "$key"
   bytes="${aggregated_data[$key]}"
   echo "Inserting record into database: IP=$ip, Upstream=$upstream, App=$app, Status=$status, Bytes=$bytes"
-  mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "INSERT INTO access_logs (Upstream, LStatus, IP, App, Bytes) VALUES ('$upstream', '$status', '$ip', '$app', '$bytes');"
+  mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "INSERT INTO access_logs (Upstream, LStatus, IP, App, Bytes) VALUES ('$upstream', '$status', '$ip', '$app', '$bytes');"
 done
 
-# Clear the log file
-echo "" > "$LOG_FILE"
+# save the log:
+cat "${LOG_FILE}.work" >> "${LOG_FILE}.$(date +%F)"
+# rm work file
+rm "${LOG_FILE}.work"
 
 # df prints used and free size, and does not list every directory, which makes this faster than du for the cache/data folder
 disk_usage_cache=$(df -BK $CACHE_LOCATION | awk 'NR==2 {print $4,$3}')
@@ -88,7 +96,7 @@ used_space_logs=$(echo "$disk_usage_logs" | awk '{gsub(/K/, ""); print $1}')
 
 update_logs_usage_sql="UPDATE cache_disk SET KiBUsed= '$used_space_logs', KiBFree='$free_space_cache' WHERE Location='logs'"
 
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$update_cache_usage_sql; $update_logs_usage_sql;"
+mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$update_cache_usage_sql; $update_logs_usage_sql;"
 
 # Remove lock file
 rm $LOCKFILE
